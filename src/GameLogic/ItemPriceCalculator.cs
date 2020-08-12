@@ -10,6 +10,7 @@ namespace MUnique.OpenMU.GameLogic
     using MUnique.OpenMU.DataModel.Configuration.Items;
     using MUnique.OpenMU.DataModel.Entities;
     using MUnique.OpenMU.GameLogic.Attributes;
+    using MUnique.OpenMU.GameLogic.ItemsPricesRules;
 
     /// <summary>
     /// This calculator calculates the item prices.
@@ -313,7 +314,7 @@ namespace MUnique.OpenMU.GameLogic
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>The buying price.</returns>
-        public long CalculateBuyingPrice(Item item) => CalculateBuyingPrice(item, item.Durability);
+        public long CalculateBuyingPrice(Item item) => CalculateBuyingPrice_2(item, item.Durability);
 
         private static long CalculateBuyingPrice(Item item, byte durability)
         {
@@ -455,6 +456,60 @@ namespace MUnique.OpenMU.GameLogic
             }
 
             return RoundPrice(price);
+        }
+
+        private static long CalculateBuyingPrice_2(Item item, byte durability)
+        {
+            ICollection<ItemPriceRule> buyPriceRuleList = new List<ItemPriceRule>
+            {
+                new OrbsAndScrollPriceRule(),
+                new SpecialItemsPriceRules(),
+                new NonZeroValuePriceRule(),
+                new RingsPendantsOrbsPetsScrollPriceRule(),
+                new WingsPriceRule(),
+                new ShieldOrOneHandedPriceRule(),
+                new ItemWithSkillPriceRule(),
+                new LuckPriceRule(),
+                new ItemOptionsPriceRule(),
+                new WingOptionsPriceRule(),
+                new ExcellentOptionsPriceRule(),
+                new GuardianOptionsPriceRule(),
+            };
+
+            ICollection<ItemPriceRule> buyPriceRulesForAllItems = new List<ItemPriceRule>
+            {
+                new MaximumPriceRule(),
+                new MaximumDurabilityPriceRule(),
+            };
+
+            Tuple<long, bool> priceCalculation = null;
+            long calculatedPrice = 0L;
+            ItemDefinition definition = item.Definition;
+
+            int dropLevel = definition.DropLevel + (item.Level * 3);
+            if (item.ItemOptions.Any(o => o.ItemOption.OptionType == ItemOptionTypes.Excellent))
+            {
+                // increased drop level of excellent item
+                dropLevel += 25;
+            }
+
+            foreach (ItemPriceRule rule in buyPriceRuleList)
+            {
+                priceCalculation = rule.CalculatePrice(item, definition, dropLevel, calculatedPrice);
+                calculatedPrice = priceCalculation.Item1;
+                if (priceCalculation.Item2)
+                {
+                    break; // OrbsAndScrollPriceRules, PotsAndAntidotePriceRule, NonZeroValuePriceRule and RingsPendantsOrbsPetsScrollPriceRule halt the price calculation
+                }
+            }
+
+            foreach (ItemPriceRule rule in buyPriceRulesForAllItems)
+            {
+                priceCalculation = rule.CalculatePrice(item, definition, dropLevel, calculatedPrice);
+                calculatedPrice = priceCalculation.Item1;
+            }
+
+            return RoundPrice(calculatedPrice);
         }
 
         private static bool IsWing(Item item)

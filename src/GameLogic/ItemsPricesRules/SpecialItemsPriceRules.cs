@@ -225,14 +225,15 @@
         }
 
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             if (SpecialItemDictionary.TryGetValue(GetId(definition.Group, definition.Number), out var specialItemPriceFunction))
             {
-                return new Tuple<long, bool>(specialItemPriceFunction(item), true);
+                priceCalculation.Price = specialItemPriceFunction(item);
+                priceCalculation.StopPriceCalculation = true;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
 
         private static int GetId(byte group, int id)

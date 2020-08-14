@@ -13,7 +13,7 @@
     public class ItemOptionsPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             var opt = item.ItemOptions.FirstOrDefault(o => o.ItemOption.OptionType == ItemOptionTypes.Option);
             var optionLevel = opt?.Level ?? 0;
@@ -24,14 +24,14 @@
                 case 0:
                     break;
                 case 1:
-                    price += (long)(price * 0.6);
+                    priceCalculation.Price += (long)(priceCalculation.Price * 0.6);
                     break;
                 default:
-                    price += (long)(price * 0.7 * Math.Pow(2, optionLevel - 1));
+                    priceCalculation.Price += (long)(priceCalculation.Price * 0.7 * Math.Pow(2, optionLevel - 1));
                     break;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

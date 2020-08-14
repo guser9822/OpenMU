@@ -13,14 +13,14 @@
     public class GuardianOptionsPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             if (item.ItemOptions.Any(o => o.ItemOption.OptionType == ItemOptionTypes.GuardianOption))
             {
-                price += price * 16 / 100;
+                priceCalculation.Price += priceCalculation.Price * 16 / 100;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

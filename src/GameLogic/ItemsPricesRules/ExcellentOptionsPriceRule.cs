@@ -13,16 +13,16 @@
     public class ExcellentOptionsPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             // For each excellent option double the value
             var excCount = item.ItemOptions.Count(o => o.ItemOption.OptionType == ItemOptionTypes.Excellent);
             for (int i = 0; i < excCount; i++)
             {
-                price += price;
+                priceCalculation.Price += priceCalculation.Price;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

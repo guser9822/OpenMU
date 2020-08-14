@@ -14,14 +14,14 @@
         private const short ForceWaveSkillId = 66;
 
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             if (item.HasSkill && definition.Skill?.Number != ForceWaveSkillId)
             {
-                price += (long)(price * 1.5);
+                priceCalculation.Price += (long)(priceCalculation.Price * 1.5);
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

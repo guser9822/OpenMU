@@ -10,14 +10,15 @@
     public class OrbsAndScrollPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             if (definition.Value > 0 && (definition.Group == 15 || definition.Group == 12))
             {
-                return new Tuple<long, bool>(definition.Value, true);
+                priceCalculation.Price = definition.Value;
+                priceCalculation.StopPriceCalculation = true;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

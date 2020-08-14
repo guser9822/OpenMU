@@ -12,17 +12,17 @@
     public class MaximumDurabilityPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             var maxDurability = item.GetMaximumDurabilityOfOnePiece();
             if (maxDurability > 1 && maxDurability > item.Durability)
             {
                 float multiplier = 1.0f - ((float)item.Durability / maxDurability);
-                long loss = (long)(price * 0.6 * multiplier);
-                price -= loss;
+                long loss = (long)(priceCalculation.Price * 0.6 * multiplier);
+                priceCalculation.Price -= loss;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

@@ -14,16 +14,16 @@
     public class ShieldOrOneHandedPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             var isOneHandedWeapon = item.Definition.Group < 6 && definition.Width < 2 && definition.BasePowerUpAttributes.Any(o => o.TargetAttribute == Stats.MinimumPhysBaseDmg);
             var isShield = item.Definition.Group == 6;
             if (isOneHandedWeapon || isShield)
             {
-                price = price * 80 / 100;
+                priceCalculation.Price = priceCalculation.Price * 80 / 100;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

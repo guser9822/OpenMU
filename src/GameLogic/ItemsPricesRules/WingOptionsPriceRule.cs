@@ -13,16 +13,16 @@
     public class WingOptionsPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             // For each wing option, add 25%
             var wingOptionCount = item.ItemOptions.Count(o => o.ItemOption.OptionType == ItemOptionTypes.Wing);
             for (int i = 0; i < wingOptionCount; i++)
             {
-                price += (long)(price * 0.25);
+                priceCalculation.Price += (long)(priceCalculation.Price * 0.25);
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

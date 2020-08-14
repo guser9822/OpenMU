@@ -12,15 +12,15 @@
     public class RingsPendantsOrbsPetsScrollPriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             if ((item.Definition.Group == 12 && item.Definition.Number > 6) || item.Definition.Group == 13 || item.Definition.Group == 15)
             {
-                price = (dropLevel * dropLevel * dropLevel) + 100;
-                return new Tuple<long, bool>(price, true);
+                priceCalculation.Price = (priceCalculation.DropLevel * priceCalculation.DropLevel * priceCalculation.DropLevel) + 100;
+                priceCalculation.StopPriceCalculation = true;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

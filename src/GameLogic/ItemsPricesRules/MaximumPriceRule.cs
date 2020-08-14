@@ -14,14 +14,14 @@
         private const long MaximumPrice = 3000000000;
 
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
-            if (price > MaximumPrice)
+            if (priceCalculation.Price > MaximumPrice)
             {
-                price = MaximumPrice;
+                priceCalculation.Price = MaximumPrice;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

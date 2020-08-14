@@ -21,23 +21,23 @@
         };
 
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
-            dropLevel = this.IncreaseDropLevelByItemLevel(item.Level, dropLevel);
+            priceCalculation.DropLevel = this.IncreaseDropLevelByItemLevel(item.Level, priceCalculation.DropLevel);
 
             // Wings
             if (IsWing(item))
             {
                 // maybe we have to exclude small wings here
-                price = ((dropLevel + 40) * dropLevel * dropLevel * 11) + 40000000;
+                priceCalculation.Price = ((priceCalculation.DropLevel + 40) * priceCalculation.DropLevel * priceCalculation.DropLevel * 11) + 40000000;
             }
             else
             {
                 // This is " not a wing" price rule, It could be moved into another rule
-                price = ((dropLevel + 40) * dropLevel * dropLevel / 8) + 100;
+                priceCalculation.Price = ((priceCalculation.DropLevel + 40) * priceCalculation.DropLevel * priceCalculation.DropLevel / 8) + 100;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
 
         private static bool IsWing(Item item)

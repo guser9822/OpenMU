@@ -12,28 +12,28 @@
     public class NonZeroValuePriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
-        public override Tuple<long, bool> CalculatePrice(Item item, ItemDefinition definition, int dropLevel, long price)
+        public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
             if (definition.Value > 0)
             {
-                price = definition.Value * definition.Value * 10 / 12;
+                priceCalculation.Price = definition.Value * definition.Value * 10 / 12;
 
                 if (item.Definition.Group == 14 && item.Definition.Number <= 8)
                 {
                     // Potions + Antidote
                     if (item.Level > 0)
                     {
-                        price *= (long)Math.Pow(2, item.Level);
+                        priceCalculation.Price *= (long)Math.Pow(2, item.Level);
                     }
 
-                    price = price / 10 * 10;
-                    price *= item.Durability;
+                    priceCalculation.Price = priceCalculation.Price / 10 * 10;
+                    priceCalculation.Price *= item.Durability;
                 }
 
-                return new Tuple<long, bool>(price, true);
+                priceCalculation.StopPriceCalculation = true;
             }
 
-            return new Tuple<long, bool>(price, false);
+            return priceCalculation;
         }
     }
 }

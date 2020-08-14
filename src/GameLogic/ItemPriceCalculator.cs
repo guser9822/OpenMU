@@ -481,8 +481,6 @@ namespace MUnique.OpenMU.GameLogic
                 new MaximumPriceRule(),
                 new MaximumDurabilityPriceRule(),
             };
-
-            Tuple<long, bool> priceCalculation = null;
             long calculatedPrice = 0L;
             ItemDefinition definition = item.Definition;
 
@@ -493,20 +491,21 @@ namespace MUnique.OpenMU.GameLogic
                 dropLevel += 25;
             }
 
+            ItemPriceRule.PriceCalculation priceCalc = new ItemPriceRule.PriceCalculation(0L, dropLevel);
             foreach (ItemPriceRule rule in buyPriceRuleList)
             {
-                priceCalculation = rule.CalculatePrice(item, definition, dropLevel, calculatedPrice);
-                calculatedPrice = priceCalculation.Item1;
-                if (priceCalculation.Item2)
+                priceCalc = rule.CalculatePrice(item, definition, priceCalc);
+                calculatedPrice = priceCalc.Price;
+                if (priceCalc.StopPriceCalculation)
                 {
-                    break; // OrbsAndScrollPriceRules, PotsAndAntidotePriceRule, NonZeroValuePriceRule and RingsPendantsOrbsPetsScrollPriceRule halt the price calculation
+                    break;
                 }
             }
 
             foreach (ItemPriceRule rule in buyPriceRulesForAllItems)
             {
-                priceCalculation = rule.CalculatePrice(item, definition, dropLevel, calculatedPrice);
-                calculatedPrice = priceCalculation.Item1;
+                priceCalc = rule.CalculatePrice(item, definition, priceCalc);
+                calculatedPrice = priceCalc.Price;
             }
 
             return RoundPrice(calculatedPrice);

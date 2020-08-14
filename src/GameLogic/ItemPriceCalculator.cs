@@ -466,6 +466,7 @@ namespace MUnique.OpenMU.GameLogic
                 new SpecialItemsPriceRules(),
                 new NonZeroValuePriceRule(),
                 new RingsPendantsOrbsPetsScrollPriceRule(),
+                new BasePriceRule(),
                 new WingsPriceRule(),
                 new ShieldOrOneHandedPriceRule(),
                 new ItemWithSkillPriceRule(),

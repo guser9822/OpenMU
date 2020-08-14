@@ -3,12 +3,22 @@
     using MUnique.OpenMU.DataModel.Configuration.Items;
     using MUnique.OpenMU.DataModel.Entities;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The definition of an item price rule.
     /// </summary>
     public abstract class ItemPriceRule
     {
+
+        private static readonly HashSet<short> WingIds = new HashSet<short>
+        {
+            0, 1, 2, 3, 4, 5, 6,
+            36, 37, 38, 39, 40,
+            41, 42, 43, // sum wings
+            49, 50, // Rf Capes
+            130, 131, 132, 133, 134, 135, // mini wings? -> All worth 240, remove here!
+        };
 
         /// <summary>
         /// Increase the drop level given the level of the item.
@@ -47,6 +57,17 @@
         /// <param name="priceCalculation">Defintion of the current state of the price calculation.</param>
         /// <returns> Return a pair where T1 is the price of the item and T2 state if the calculation of the price should halt. </returns>
         public abstract PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation);
+
+        /// <summary>
+        /// State if the item of the type wing/cape.
+        /// </summary>
+        /// <param name="item">Item.</param>
+        /// <returns>true if the item is of type wing/cape, false otherwise</returns>
+        protected static bool IsWing(Item item)
+        {
+            return (item.Definition.Group == 12 && WingIds.Contains(item.Definition.Number))
+                   || (item.Definition.Group == 13 && item.Definition.Number == 30); // DL 1st Cape
+        }
 
         /// <summary>
         /// Contains the price calculation information.

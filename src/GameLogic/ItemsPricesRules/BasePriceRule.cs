@@ -7,18 +7,17 @@
     using MUnique.OpenMU.DataModel.Entities;
 
     /// <summary>
-    /// Price rule for wings. If the item is not wings, it apply another calculation to the price.
+    /// Base price rule calculation used by non special items.
     /// </summary>
-    public class WingsPriceRule : ItemPriceRule
+    public class BasePriceRule : ItemPriceRule
     {
         /// <inheritdoc/>
         public override PriceCalculation CalculatePrice(Item item, ItemDefinition definition, PriceCalculation priceCalculation)
         {
-            // Wings
-            if (IsWing(item))
+            priceCalculation.DropLevel = this.IncreaseDropLevelByItemLevel(item.Level, priceCalculation.DropLevel);
+            if (!IsWing(item))
             {
-                // maybe we have to exclude small wings here
-                priceCalculation.Price = ((priceCalculation.DropLevel + 40) * priceCalculation.DropLevel * priceCalculation.DropLevel * 11) + 40000000;
+                priceCalculation.Price = ((priceCalculation.DropLevel + 40) * priceCalculation.DropLevel * priceCalculation.DropLevel / 8) + 100;
             }
 
             return priceCalculation;

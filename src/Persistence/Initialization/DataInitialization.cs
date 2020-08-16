@@ -216,6 +216,15 @@ namespace MUnique.OpenMU.Persistence.Initialization
             }
         }
 
+        private void CreateItemPriceRules()
+        {
+            var shieldOrOneHandeDef = this.context.CreateNew<ItemPriceRuleDefinition>();
+            shieldOrOneHandeDef.Description = "Shield or one handed price rule";
+            shieldOrOneHandeDef.SerializedRule = "Rule";
+            shieldOrOneHandeDef.SerializedFunction = "Function";
+            this.gameConfiguration.ItemPriceRules.Add(shieldOrOneHandeDef);
+        }
+
         /// <summary>
         /// Creates the stat attributes.
         /// </summary>
@@ -546,6 +555,8 @@ namespace MUnique.OpenMU.Persistence.Initialization
             this.gameConfiguration.ItemOptions.Add(this.CreateOptionDefinition(Stats.MaximumPhysBaseDmg));
             this.gameConfiguration.ItemOptions.Add(this.CreateOptionDefinition(Stats.MaximumWizBaseDmg));
             this.gameConfiguration.ItemOptions.Add(this.CreateOptionDefinition(Stats.MaximumCurseBaseDmg));
+
+            this.CreateItemPriceRules();
 
             new CharacterClassInitialization(this.context, this.gameConfiguration).Initialize();
             new SkillsInitializer(this.context, this.gameConfiguration).Initialize();

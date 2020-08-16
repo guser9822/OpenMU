@@ -16,6 +16,7 @@
         "MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionType",
         "MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionDefinition",
         "MUnique.OpenMU.DataModel.Configuration.Items.ItemSetGroup",
+        "MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition",
         "MUnique.OpenMU.DataModel.Configuration.MasterSkillDefinition",
         "MUnique.OpenMU.DataModel.Configuration.Skill",
         "MUnique.OpenMU.DataModel.Configuration.GameMapDefinition",

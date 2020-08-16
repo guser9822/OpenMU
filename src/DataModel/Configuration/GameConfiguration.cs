@@ -170,6 +170,12 @@ namespace MUnique.OpenMU.DataModel.Configuration
         public virtual ICollection<ItemOptionCombinationBonus> ItemOptionCombinationBonuses { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the item price rules.
+        /// </summary>
+        [MemberOfAggregate]
+        public virtual ICollection<ItemPriceRuleDefinition> ItemPriceRules { get; protected set; }
+
+        /// <summary>
         /// Gets or sets the map definitions.
         /// </summary>
         [MemberOfAggregate]
@@ -204,5 +210,7 @@ namespace MUnique.OpenMU.DataModel.Configuration
         /// </summary>
         [MemberOfAggregate]
         public virtual ICollection<PlugInConfiguration> PlugInConfigurations { get; protected set; }
+
+
     }
 }

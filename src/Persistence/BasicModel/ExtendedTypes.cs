@@ -2090,6 +2090,32 @@ namespace MUnique.OpenMU.Persistence.BasicModel
         }
 
         /// <summary>
+        /// Gets the raw collection of <see cref="ItemPriceRules" />.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("itemPriceRules")]
+        [System.Text.Json.Serialization.JsonPropertyName("itemPriceRules")]
+        public ICollection<ItemPriceRuleDefinition> RawItemPriceRules { get; } = new List<ItemPriceRuleDefinition>();
+        
+        /// <inheritdoc/>
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public override ICollection<MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition> ItemPriceRules
+        {
+            get
+            {
+                return base.ItemPriceRules ?? (base.ItemPriceRules = new CollectionAdapter<MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition, ItemPriceRuleDefinition>(this.RawItemPriceRules)); 
+            }
+            protected set
+            {
+                this.ItemPriceRules.Clear();
+                foreach (var item in value)
+                {
+                    this.ItemPriceRules.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the raw collection of <see cref="Maps" />.
         /// </summary>
         [Newtonsoft.Json.JsonProperty("maps")]
@@ -5039,6 +5065,38 @@ namespace MUnique.OpenMU.Persistence.BasicModel
 
         /// <inheritdoc/>
         public ItemOptionType Convert() => this;
+    }
+
+    /// <summary>
+    /// A plain implementation of <see cref="MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition"/>.
+    /// </summary>
+    public partial class ItemPriceRuleDefinition : MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition, IIdentifiable, IConvertibleTo<ItemPriceRuleDefinition>
+    {
+        /// <summary>
+        /// Gets or sets the identifier of this instance.
+        /// </summary>
+        public Guid Id { get; set; }
+        
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var baseObject = obj as IIdentifiable;
+            if (baseObject != null)
+            {
+                return baseObject.Id == this.Id;
+            }
+
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public ItemPriceRuleDefinition Convert() => this;
     }
 
     /// <summary>

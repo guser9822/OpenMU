@@ -1725,6 +1725,17 @@ public ICollection<JewelMix> RawJewelMixes { get; } = new List<JewelMix>();
             }
         }
 
+        public ICollection<ItemPriceRuleDefinition> RawItemPriceRules { get; } = new List<ItemPriceRuleDefinition>();        
+        /// <inheritdoc/>
+        [NotMapped]
+        public override ICollection<MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition> ItemPriceRules
+        {
+            get
+            {
+                return base.ItemPriceRules ?? (base.ItemPriceRules = new CollectionAdapter<MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition, ItemPriceRuleDefinition>(this.RawItemPriceRules)); 
+            }
+        }
+
         public ICollection<GameMapDefinition> RawMaps { get; } = new List<GameMapDefinition>();        
         /// <inheritdoc/>
         [NotMapped]
@@ -4295,6 +4306,42 @@ public ICollection<IncreasableItemOption> RawPossibleOptions { get; } = new List
     }
 
     /// <summary>
+    /// The Entity Framework Core implementation of <see cref="MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition"/>.
+    /// </summary>
+    [Table("ItemPriceRuleDefinition", Schema = "config")]
+    internal partial class ItemPriceRuleDefinition : MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition, IIdentifiable
+    {        
+
+        protected void InitJoinCollections()
+        {
+        }
+
+        /// <summary>
+        /// Gets or sets the identifier of this instance.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var baseObject = obj as IIdentifiable;
+            if (baseObject != null)
+            {
+                return baseObject.Id == this.Id;
+            }
+
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+    }
+
+    /// <summary>
     /// The Entity Framework Core implementation of <see cref="MUnique.OpenMU.DataModel.Configuration.Items.ItemSetGroup"/>.
     /// </summary>
     [Table("ItemSetGroup", Schema = "config")]
@@ -5389,6 +5436,7 @@ public ICollection<AttributeRelationship> RawRelatedValues { get; } = new List<A
             modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionDefinition>();
             modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionOfLevel>();
             modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionType>();
+            modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition>();
             modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.ItemSetGroup>();
             modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.ItemSlotType>();
             modelBuilder.Ignore<MUnique.OpenMU.DataModel.Configuration.Items.LevelBonus>();
@@ -5624,6 +5672,9 @@ public ICollection<AttributeRelationship> RawRelatedValues { get; } = new List<A
 
             Mapster.TypeAdapterConfig.GlobalSettings.NewConfig<MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionType, MUnique.OpenMU.DataModel.Configuration.Items.ItemOptionType>()
                             .Include<ItemOptionType, BasicModel.ItemOptionType>();
+
+            Mapster.TypeAdapterConfig.GlobalSettings.NewConfig<MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition, MUnique.OpenMU.DataModel.Configuration.Items.ItemPriceRuleDefinition>()
+                            .Include<ItemPriceRuleDefinition, BasicModel.ItemPriceRuleDefinition>();
 
             Mapster.TypeAdapterConfig.GlobalSettings.NewConfig<MUnique.OpenMU.DataModel.Configuration.Items.ItemSetGroup, MUnique.OpenMU.DataModel.Configuration.Items.ItemSetGroup>()
                             .Include<ItemSetGroup, BasicModel.ItemSetGroup>();
